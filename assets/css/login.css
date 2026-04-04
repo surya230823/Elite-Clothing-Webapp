@@ -17,7 +17,6 @@
   --nav-active: #ff005c;
   --mint: #2ee6a5;
   --mint-on: #0a0a0a;
-  --mint-glow: rgba(46, 230, 165, 0.25);
   --danger: #f43f5e;
   --font: "Inter", system-ui, -apple-system, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
@@ -107,8 +106,7 @@ body.login-page {
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.28),
     0 24px 80px rgba(0, 0, 0, 0.22),
-    var(--glass-inset),
-    0 0 80px rgba(255, 0, 92, 0.05);
+    var(--glass-inset);
 }
 
 .login-card__accent {
@@ -162,7 +160,6 @@ body.login-page {
   font-size: 1.15rem;
   line-height: 1;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .login-brand__text {
@@ -243,7 +240,7 @@ body.login-page {
 .login-form input:focus {
   outline: none;
   border-color: var(--mint);
-  box-shadow: 0 0 0 3px var(--mint-glow);
+  box-shadow: 0 0 0 2px rgba(46, 230, 165, 0.35);
 }
 
 .login-error {
@@ -276,13 +273,13 @@ body.login-page {
   cursor: pointer;
   color: var(--mint-on);
   background: linear-gradient(135deg, var(--mint) 0%, #22d3a0 100%);
-  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.12) inset, 0 4px 24px var(--mint-glow);
-  transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.14) inset;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), filter 0.15s ease;
 }
 
 .login-submit:hover {
-  filter: brightness(1.06);
-  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.14) inset, 0 6px 28px rgba(46, 230, 165, 0.38);
+  filter: brightness(1.05);
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.18) inset;
 }
 
 .login-submit:active {
