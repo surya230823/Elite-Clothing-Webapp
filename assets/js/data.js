@@ -119,6 +119,15 @@ const MOCK_RECEIVED = [
   },
 ];
 
+/** Pipeline order for derived timelines in order overview */
+const PIPELINE_STAGES = [
+  "ENQUIRY / REACHOUT",
+  "SAMPLE CONFIRMATION",
+  "QUOTATION PROVIDED",
+  "PRICE CONFIRMATION",
+  "ORDER CONFIRMATION",
+];
+
 const MOCK_AWAITING_ELITE = [
   {
     id: "REQ-2415",
@@ -126,6 +135,12 @@ const MOCK_AWAITING_ELITE = [
     issue: "Approve revised stripe spec",
     stage: "SAMPLE CONFIRMATION",
     waiting: "elite",
+    opened: "2026-03-28",
+    handler: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-12",
+      "SAMPLE CONFIRMATION": "2026-03-22",
+    },
   },
   {
     id: "REQ-2411",
@@ -133,6 +148,13 @@ const MOCK_AWAITING_ELITE = [
     issue: "Send final quotation PDF",
     stage: "QUOTATION PROVIDED",
     waiting: "elite",
+    opened: "2026-04-01",
+    handler: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-18",
+      "SAMPLE CONFIRMATION": "2026-03-22",
+      "QUOTATION PROVIDED": "2026-03-29",
+    },
   },
   {
     id: "REQ-2409",
@@ -140,6 +162,14 @@ const MOCK_AWAITING_ELITE = [
     issue: "Confirm buffer % for rush order",
     stage: "PRICE CONFIRMATION",
     waiting: "elite",
+    opened: "2026-03-25",
+    handler: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-05",
+      "SAMPLE CONFIRMATION": "2026-03-12",
+      "QUOTATION PROVIDED": "2026-03-20",
+      "PRICE CONFIRMATION": "2026-03-26",
+    },
   },
   {
     id: "REQ-2406",
@@ -147,6 +177,30 @@ const MOCK_AWAITING_ELITE = [
     issue: "Vendor uploaded counter-offer",
     stage: "PRICE CONFIRMATION",
     waiting: "vendor",
+    opened: "2026-03-30",
+    handler: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-08",
+      "SAMPLE CONFIRMATION": "2026-03-15",
+      "QUOTATION PROVIDED": "2026-03-24",
+      "PRICE CONFIRMATION": "2026-03-28",
+    },
+  },
+  {
+    id: "REQ-2401",
+    vendor: "Brightline Co.",
+    issue: "Counter-sign revised MOQ terms",
+    stage: "ORDER CONFIRMATION",
+    waiting: "vendor",
+    opened: "2026-04-02",
+    handler: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-01",
+      "SAMPLE CONFIRMATION": "2026-03-10",
+      "QUOTATION PROVIDED": "2026-03-18",
+      "PRICE CONFIRMATION": "2026-03-25",
+      "ORDER CONFIRMATION": "2026-04-01",
+    },
   },
 ];
 

@@ -32,13 +32,13 @@
         </div>
       </div>
       <nav class="sidebar__nav">
-        <button type="button" class="nav-item is-active" data-view="overview">Orders overview (executive)</button>
-        <button type="button" class="nav-item" data-view="completed">Completed orders &amp; details</button>
-        <button type="button" class="nav-item" data-view="ongoing">Ongoing requests</button>
-        <button type="button" class="nav-item" data-view="pricing">Pricing overview &amp; variables</button>
-        <button type="button" class="nav-item" data-view="alerts">Alerts &amp; action needed</button>
-        <button type="button" class="nav-item" data-view="received">Orders received</button>
-        <button type="button" class="nav-item" data-view="mail">Mail response</button>
+        <button type="button" class="nav-item is-active" data-view="overview">Overview</button>
+        <button type="button" class="nav-item" data-view="completed">Completed</button>
+        <button type="button" class="nav-item" data-view="ongoing">Ongoing</button>
+        <button type="button" class="nav-item" data-view="pricing">Pricing</button>
+        <button type="button" class="nav-item" data-view="alerts">Alerts</button>
+        <button type="button" class="nav-item" data-view="received">Received</button>
+        <button type="button" class="nav-item" data-view="mail">Mail</button>
       </nav>
       <div class="sidebar__pipeline">
         <p class="sidebar__pipeline-title">Pipeline steps</p>
@@ -58,7 +58,7 @@
     <main class="main">
       <header class="topbar">
         <div class="topbar__lead">
-          <h1 class="topbar__title" id="page-title">Orders overview (executive view)</h1>
+          <h1 class="topbar__title" id="page-title">Overview</h1>
           <p class="topbar__daterange" id="global-date-line" aria-live="polite"></p>
         </div>
         <div class="topbar__range-edit">
@@ -76,7 +76,7 @@
       <div class="content">
         <!-- 1. Orders overview (executive) -->
         <section id="view-overview" class="view is-visible" aria-labelledby="page-title">
-          <div class="toolbar">
+          <div class="toolbar toolbar--wrap">
             <div class="toolbar__group">
               <label for="overview-timeline">Timeline filter</label>
               <select id="overview-timeline" class="select">
@@ -87,27 +87,48 @@
               </select>
             </div>
             <div class="toolbar__group">
-              <label for="overview-awaiting">Orders awaiting action from Elite</label>
+              <label for="overview-filter-stage">Stage</label>
+              <select id="overview-filter-stage" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="overview-filter-vendor">Vendor name</label>
+              <select id="overview-filter-vendor" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="overview-awaiting">Waiting on</label>
               <select id="overview-awaiting" class="select">
-                <option value="all">Show all</option>
-                <option value="elite">Awaiting Elite only</option>
-                <option value="vendor">Awaiting vendor only</option>
+                <option value="all">All</option>
+                <option value="elite">Elite</option>
+                <option value="vendor">Vendor</option>
               </select>
             </div>
+            <p class="toolbar__hint toolbar__hint--block muted small">Table: click column headers to sort. Use filters to narrow rows; cards follow the same filtered set.</p>
           </div>
 
-          <div class="metrics" id="overview-metrics"></div>
+          <div class="metrics metrics--two" id="overview-metrics"></div>
 
           <div class="panel">
-            <h2 class="panel__title">Orders awaiting action from Elite</h2>
+            <h2 class="panel__title">Orders awaiting action</h2>
             <div class="table-wrap">
-              <table class="table" id="table-awaiting">
+              <table class="table table--sortable" id="table-awaiting" data-sort-key="">
                 <thead></thead>
                 <tbody></tbody>
               </table>
             </div>
           </div>
         </section>
+
+        <div id="awaiting-modal" class="modal" hidden aria-hidden="true">
+          <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+          <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="awaiting-modal-title">
+            <button type="button" class="modal__close" data-modal-close aria-label="Close">&times;</button>
+            <h2 class="modal__title" id="awaiting-modal-title">Order details</h2>
+            <p class="modal__handler" id="awaiting-modal-handler"></p>
+            <p class="modal__issue muted" id="awaiting-modal-issue"></p>
+            <h3 class="modal__section-title">Pipeline timeline</h3>
+            <ul class="timeline" id="awaiting-modal-timeline"></ul>
+          </div>
+        </div>
 
         <!-- 2. Completed orders -->
         <section id="view-completed" class="view" hidden>

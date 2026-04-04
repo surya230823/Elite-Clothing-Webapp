@@ -4,13 +4,13 @@
  */
 (function () {
   const TITLES = {
-    overview: "Orders overview (executive view)",
-    completed: "Completed orders & details",
-    ongoing: "Ongoing requests",
-    pricing: "Pricing overview & variables",
-    alerts: "Alerts & action needed",
-    received: "Orders received",
-    mail: "Mail response",
+    overview: "Overview",
+    completed: "Completed",
+    ongoing: "Ongoing",
+    pricing: "Pricing",
+    alerts: "Alerts",
+    received: "Received",
+    mail: "Mail",
   };
 
   const badgeClass = (progress) => {
@@ -120,12 +120,14 @@
   }
 
   const tableRowCache = {
+    awaiting: [],
     completed: [],
     ongoing: [],
     received: [],
   };
 
   const tableColumns = {
+    awaiting: null,
     completed: null,
     ongoing: null,
     received: null,
@@ -166,58 +168,114 @@
     });
   }
 
+  function fillOverviewFilterSelects() {
+    const stageSel = document.getElementById("overview-filter-stage");
+    const vendorSel = document.getElementById("overview-filter-vendor");
+    if (!stageSel || !vendorSel || typeof PIPELINE_STAGES === "undefined") return;
+    stageSel.innerHTML =
+      `<option value="">All stages</option>` +
+      PIPELINE_STAGES.map((s) => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join("");
+    const vendors = [...new Set(MOCK_AWAITING_ELITE.map((a) => a.vendor))].sort();
+    vendorSel.innerHTML =
+      `<option value="">All vendors</option>` +
+      vendors.map((v) => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join("");
+  }
+
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  }
+
+  function openAwaitingModal(row) {
+    const modal = document.getElementById("awaiting-modal");
+    if (!modal) return;
+    document.getElementById("awaiting-modal-title").textContent = `${row.id} · ${row.vendor}`;
+    document.getElementById("awaiting-modal-handler").innerHTML = `<strong>Handler</strong> · ${escapeHtml(row.handler || "—")}`;
+    document.getElementById("awaiting-modal-issue").textContent = row.issue || "";
+
+    const stages = typeof PIPELINE_STAGES !== "undefined" ? PIPELINE_STAGES : [];
+    const currentIdx = stages.indexOf(row.stage);
+    const safeIdx = currentIdx >= 0 ? currentIdx : 0;
+    const dates = row.stepDates || {};
+    const items = stages.map((name, i) => {
+      let state = "upcoming";
+      if (i < safeIdx) state = "done";
+      else if (i === safeIdx) state = "current";
+      const d = dates[name] ? parseISODate(dates[name]) : null;
+      const dateStr =
+        d && !Number.isNaN(d.getTime())
+          ? d.toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : null;
+      return { name, state, dateStr };
+    });
+
+    document.getElementById("awaiting-modal-timeline").innerHTML = items
+      .map(
+        (it) => `
+      <li class="timeline__item timeline__item--${it.state}">
+        <span class="timeline__dot" aria-hidden="true"></span>
+        <div class="timeline__body">
+          <span class="timeline__name">${escapeHtml(it.name)}</span>
+          ${it.dateStr ? `<span class="timeline__date">${escapeHtml(it.dateStr)}</span>` : it.state === "current" ? `<span class="timeline__date timeline__date--now">In progress</span>` : ""}
+        </div>
+      </li>`
+      )
+      .join("");
+
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    modal.querySelector(".modal__close")?.focus();
+  }
+
+  function closeAwaitingModal() {
+    const modal = document.getElementById("awaiting-modal");
+    if (!modal) return;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+  }
+
   /* --- Overview --- */
   function refreshOverview() {
     const baseRange = getGlobalRange();
     const days = document.getElementById("overview-timeline").value;
     const range = applyTimelineDays(baseRange, days);
     const awaitingFilter = document.getElementById("overview-awaiting").value;
+    const stageFilter = document.getElementById("overview-filter-stage")?.value || "";
+    const vendorFilter = document.getElementById("overview-filter-vendor")?.value || "";
 
-    const receivedInRange = MOCK_RECEIVED.filter((r) =>
-      inRange(r.received, range.start, range.end)
+    let awaiting = MOCK_AWAITING_ELITE.filter((a) =>
+      a.opened ? inRange(a.opened, range.start, range.end) : true
     );
-    const ongoingInRange = MOCK_ONGOING.filter((r) =>
-      inRange(r.received, range.start, range.end)
-    );
-    const completedInRange = MOCK_COMPLETED.filter((r) =>
-      inRange(r.completed, range.start, range.end)
-    );
+    if (stageFilter) awaiting = awaiting.filter((a) => a.stage === stageFilter);
+    if (vendorFilter) awaiting = awaiting.filter((a) => a.vendor === vendorFilter);
+    if (awaitingFilter === "elite") awaiting = awaiting.filter((a) => a.waiting === "elite");
+    else if (awaitingFilter === "vendor")
+      awaiting = awaiting.filter((a) => a.waiting === "vendor");
 
-    const totalRequests = receivedInRange.length + ongoingInRange.length;
-    const sampleConfirmed = ongoingInRange.filter(
-      (r) => r.progress !== "ENQUIRY / REACHOUT"
-    ).length;
-    const priceNegotiations = ongoingInRange.filter(
-      (r) =>
-        r.progress === "QUOTATION PROVIDED" || r.progress === "PRICE CONFIRMATION"
-    ).length;
-    const confirmedOrders = completedInRange.length;
+    const waitingElite = awaiting.filter((a) => a.waiting === "elite").length;
+    const waitingVendor = awaiting.filter((a) => a.waiting === "vendor").length;
 
     const metricsEl = document.getElementById("overview-metrics");
     metricsEl.innerHTML = [
-      { label: "Total requests", value: totalRequests },
-      { label: "Requests with sample confirmed", value: sampleConfirmed },
-      { label: "Price negotiations", value: priceNegotiations },
-      { label: "Confirmed orders", value: confirmedOrders },
+      { label: "Waiting on Elite", value: waitingElite },
+      { label: "Waiting on Vendor", value: waitingVendor },
     ]
       .map(
         (m) => `
-      <article class="metric-card">
+      <article class="metric-card metric-card--accent">
         <p class="metric-card__label">${m.label}</p>
         <p class="metric-card__value">${m.value}</p>
       </article>`
       )
       .join("");
 
-    let awaiting = MOCK_AWAITING_ELITE;
-    if (awaitingFilter === "elite") awaiting = awaiting.filter((a) => a.waiting === "elite");
-    else if (awaitingFilter === "vendor")
-      awaiting = awaiting.filter((a) => a.waiting === "vendor");
-
     const awaitingCols = [
       { label: "Order ID", sortKey: "id", render: (r) => r.id },
-      { label: "Vendor", sortKey: "vendor", render: (r) => r.vendor },
-      { label: "Issue", render: (r) => r.issue },
+      { label: "Vendor name", sortKey: "vendor", render: (r) => r.vendor },
+      { label: "Issue", sortKey: "issue", render: (r) => r.issue },
       {
         label: "Stage",
         sortKey: "stage",
@@ -228,8 +286,18 @@
         sortKey: "waiting",
         render: (r) => (r.waiting === "elite" ? "Elite" : "Vendor"),
       },
+      {
+        label: "Actions",
+        render: (r) =>
+          `<button type="button" class="btn btn--ghost btn--small btn--cta" data-awaiting-detail="${escapeAttr(r.id)}">View details</button>`,
+      },
     ];
+
+    tableColumns.awaiting = awaitingCols;
+    tableRowCache.awaiting = [...awaiting];
     const t = document.getElementById("table-awaiting");
+    t.dataset.sortKey = "";
+    t.querySelectorAll("th[data-sort]").forEach((h) => h.classList.remove("is-sorted"));
     renderTableHead(t, awaitingCols);
     renderTableBody(t, awaiting, awaitingCols);
   }
@@ -633,6 +701,25 @@
   document.getElementById("global-end").addEventListener("change", refreshAll);
   document.getElementById("overview-timeline").addEventListener("change", refreshOverview);
   document.getElementById("overview-awaiting").addEventListener("change", refreshOverview);
+  document.getElementById("overview-filter-stage").addEventListener("change", refreshOverview);
+  document.getElementById("overview-filter-vendor").addEventListener("change", refreshOverview);
+
+  document.getElementById("table-awaiting").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-awaiting-detail]");
+    if (!btn) return;
+    const id = btn.getAttribute("data-awaiting-detail");
+    const row = tableRowCache.awaiting.find((r) => r.id === id);
+    if (row) openAwaitingModal(row);
+  });
+
+  document.querySelectorAll("[data-modal-close]").forEach((el) => {
+    el.addEventListener("click", closeAwaitingModal);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const modal = document.getElementById("awaiting-modal");
+    if (modal && !modal.hidden) closeAwaitingModal();
+  });
   ["filter-completed-vendor", "filter-completed-material", "filter-completed-type"].forEach(
     (id) => document.getElementById(id).addEventListener("change", refreshCompleted)
   );
@@ -655,9 +742,11 @@
     "All order types"
   );
 
+  fillOverviewFilterSelects();
   tableColumns.completed = COMPLETED_COLS;
   tableColumns.ongoing = ONGOING_COLS;
   tableColumns.received = RECEIVED_COLS;
+  bindDelegatedSort("table-awaiting", "awaiting");
   bindDelegatedSort("table-completed", "completed");
   bindDelegatedSort("table-ongoing", "ongoing");
   bindDelegatedSort("table-received", "received");
