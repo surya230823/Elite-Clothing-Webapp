@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<!-- Main dashboard. Assets: assets/ · Login: pages/login.html · See PROJECT_STRUCTURE.txt -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Textile — Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+</head>
+<body>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    if (!window.EliteAuth || !window.EliteAuth.isLoggedIn()) {
+      window.location.replace("pages/login.html");
+    }
+  </script>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <div class="sidebar__brand-row">
+          <span class="sidebar__icon" aria-hidden="true">
+            <span class="sidebar__icon-shape"></span>
+            <span class="sidebar__icon-letter">E</span>
+          </span>
+          <div class="sidebar__brand-text">
+            <span class="sidebar__logo">Elite Textile</span>
+            <span class="sidebar__tag">Operations</span>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar__nav">
+        <button type="button" class="nav-item is-active" data-view="overview">Orders overview (executive)</button>
+        <button type="button" class="nav-item" data-view="completed">Completed orders &amp; details</button>
+        <button type="button" class="nav-item" data-view="ongoing">Ongoing requests</button>
+        <button type="button" class="nav-item" data-view="pricing">Pricing overview &amp; variables</button>
+        <button type="button" class="nav-item" data-view="alerts">Alerts &amp; action needed</button>
+        <button type="button" class="nav-item" data-view="received">Orders received</button>
+        <button type="button" class="nav-item" data-view="mail">Mail response</button>
+      </nav>
+      <div class="sidebar__pipeline">
+        <p class="sidebar__pipeline-title">Pipeline steps</p>
+        <ol class="pipeline-steps">
+          <li>ENQUIRY / REACHOUT</li>
+          <li>SAMPLE CONFIRMATION</li>
+          <li>QUOTATION PROVIDED</li>
+          <li>PRICE CONFIRMATION</li>
+          <li>ORDER CONFIRMATION</li>
+        </ol>
+      </div>
+      <div class="sidebar__footer">
+        <button type="button" class="btn-logout" id="btn-logout">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar__lead">
+          <h1 class="topbar__title" id="page-title">Orders overview (executive view)</h1>
+          <p class="topbar__daterange" id="global-date-line" aria-live="polite"></p>
+        </div>
+        <div class="topbar__range-edit">
+          <span class="topbar__range-label">Adjust range</span>
+          <div class="topbar__actions">
+            <label class="sr-only" for="global-start">Start date</label>
+            <input type="date" id="global-start" class="input input--date" />
+            <span class="date-sep" aria-hidden="true">→</span>
+            <label class="sr-only" for="global-end">End date</label>
+            <input type="date" id="global-end" class="input input--date" />
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- 1. Orders overview (executive) -->
+        <section id="view-overview" class="view is-visible" aria-labelledby="page-title">
+          <div class="toolbar">
+            <div class="toolbar__group">
+              <label for="overview-timeline">Timeline filter</label>
+              <select id="overview-timeline" class="select">
+                <option value="7">Last 7 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last 90 days</option>
+                <option value="365">Last year</option>
+              </select>
+            </div>
+            <div class="toolbar__group">
+              <label for="overview-awaiting">Orders awaiting action from Elite</label>
+              <select id="overview-awaiting" class="select">
+                <option value="all">Show all</option>
+                <option value="elite">Awaiting Elite only</option>
+                <option value="vendor">Awaiting vendor only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="metrics" id="overview-metrics"></div>
+
+          <div class="panel">
+            <h2 class="panel__title">Orders awaiting action from Elite</h2>
+            <div class="table-wrap">
+              <table class="table" id="table-awaiting">
+                <thead></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Completed orders -->
+        <section id="view-completed" class="view" hidden>
+          <div class="toolbar toolbar--wrap">
+            <p class="toolbar__hint toolbar__hint--block">Filters: date range (header) · vendor · material · order type</p>
+            <div class="toolbar__group">
+              <label for="filter-completed-vendor">Vendor</label>
+              <select id="filter-completed-vendor" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="filter-completed-material">Material type</label>
+              <select id="filter-completed-material" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="filter-completed-type">Order type</label>
+              <select id="filter-completed-type" class="select"></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table table--sortable" id="table-completed" data-sort-key="">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. Ongoing -->
+        <section id="view-ongoing" class="view" hidden>
+          <div class="table-wrap">
+            <table class="table table--sortable" id="table-ongoing" data-sort-key="">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. Pricing -->
+        <section id="view-pricing" class="view" hidden>
+          <div class="pricing-grid">
+            <form class="panel form-panel" id="pricing-form">
+              <h2 class="panel__title">Pricing overview &amp; variables</h2>
+              <p class="panel__intro muted small">Enter costing variables. The system suggests a per-metre range; edit the final figure and export a PDF to attach in mail.</p>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="pf-material">Material type</label>
+                  <input id="pf-material" name="material" type="text" class="input" placeholder="e.g. 100% cotton, polyester" value="100% cotton" />
+                </div>
+                <div class="field">
+                  <label for="pf-readpick">Read / pick (yarn count)</label>
+                  <input id="pf-readpick" name="readpick" type="number" class="input" min="1" step="1" value="40" />
+                </div>
+                <div class="field">
+                  <label for="pf-rawprice">Raw material price (per unit)</label>
+                  <input id="pf-rawprice" name="rawprice" type="number" class="input" min="0" step="0.01" value="12.5" />
+                </div>
+                <div class="field">
+                  <label for="pf-width">Cloth width (m)</label>
+                  <input id="pf-width" name="width" type="number" class="input" min="0.1" step="0.01" value="1.5" />
+                </div>
+                <div class="field field--full">
+                  <label for="pf-sample">Sample type</label>
+                  <textarea id="pf-sample" name="sample" class="input input--area" rows="2" placeholder="e.g. 3 stripes blue, 2 red, 1 yellow">3 stripes blue, 2 red, 1 yellow</textarea>
+                </div>
+                <div class="field">
+                  <label for="pf-crimp">Crimp %</label>
+                  <input id="pf-crimp" name="crimp" type="number" class="input" min="0" step="0.1" value="2.5" />
+                </div>
+                <div class="field">
+                  <label for="pf-shrink">Shrinkage %</label>
+                  <input id="pf-shrink" name="shrink" type="number" class="input" min="0" step="0.1" value="3" />
+                </div>
+                <div class="field">
+                  <label for="pf-buffer">Buffer %</label>
+                  <input id="pf-buffer" name="buffer" type="number" class="input" min="0" step="0.1" value="8" />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn--primary">Calculate quotation</button>
+              </div>
+            </form>
+
+            <div class="panel quote-panel">
+              <h2 class="panel__title">Sample quotation</h2>
+              <p class="quote-range" id="quote-range">Submit the form to see suggested price range.</p>
+              <div class="field">
+                <label for="quote-final">Final quotation (per metre, editable)</label>
+                <input id="quote-final" type="number" class="input" min="0" step="0.01" />
+              </div>
+              <p class="quote-note" id="quote-breakdown"></p>
+              <div class="form-actions">
+                <button type="button" class="btn btn--primary" id="btn-print-quote">Export PDF (for mail attachment)</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. Alerts -->
+        <section id="view-alerts" class="view" hidden>
+          <div class="panel panel--flush">
+            <h2 class="panel__title">Alerts &amp; action needed</h2>
+          </div>
+          <div class="alerts-list" id="alerts-list"></div>
+        </section>
+
+        <!-- 6. Orders received -->
+        <section id="view-received" class="view" hidden>
+          <div class="toolbar">
+            <p class="toolbar__hint">Inbound requests · filtered by date range in the header</p>
+          </div>
+          <div class="table-wrap">
+            <table class="table table--sortable" id="table-received" data-sort-key="">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 7. Mail response -->
+        <section id="view-mail" class="view" hidden>
+          <div class="mail-layout mail-layout--wide">
+            <div class="panel">
+              <h2 class="panel__title">Mail inbox</h2>
+              <ul class="mail-inbox" id="mail-inbox"></ul>
+            </div>
+            <div class="mail-main">
+              <div class="panel">
+                <h2 class="panel__title">Requirements overview</h2>
+                <div id="mail-summary" class="mail-summary muted">Select a message to see a short summary of what the sender needs.</div>
+              </div>
+
+              <div class="panel">
+                <h2 class="panel__title">Pricing inputs</h2>
+                <p class="muted small panel__intro">Same variables as Pricing overview. Calculate here, then build the mail below.</p>
+                <form class="form-grid mail-pricing-grid" id="mail-pricing-form">
+                  <div class="field">
+                    <label for="mpf-material">Material type</label>
+                    <input id="mpf-material" type="text" class="input" value="100% cotton" />
+                  </div>
+                  <div class="field">
+                    <label for="mpf-readpick">Read / pick</label>
+                    <input id="mpf-readpick" type="number" class="input" min="1" step="1" value="40" />
+                  </div>
+                  <div class="field">
+                    <label for="mpf-rawprice">Raw material price</label>
+                    <input id="mpf-rawprice" type="number" class="input" min="0" step="0.01" value="12.5" />
+                  </div>
+                  <div class="field">
+                    <label for="mpf-width">Width (m)</label>
+                    <input id="mpf-width" type="number" class="input" min="0.1" step="0.01" value="1.5" />
+                  </div>
+                  <div class="field field--full">
+                    <label for="mpf-sample">Sample type</label>
+                    <textarea id="mpf-sample" class="input input--area" rows="2">3 stripes blue, 2 red, 1 yellow</textarea>
+                  </div>
+                  <div class="field">
+                    <label for="mpf-crimp">Crimp %</label>
+                    <input id="mpf-crimp" type="number" class="input" step="0.1" value="2.5" />
+                  </div>
+                  <div class="field">
+                    <label for="mpf-shrink">Shrinkage %</label>
+                    <input id="mpf-shrink" type="number" class="input" step="0.1" value="3" />
+                  </div>
+                  <div class="field">
+                    <label for="mpf-buffer">Buffer %</label>
+                    <input id="mpf-buffer" type="number" class="input" step="0.1" value="8" />
+                  </div>
+                </form>
+                <div class="form-actions">
+                  <button type="button" class="btn btn--primary" id="btn-mail-calc">Calculate quotation</button>
+                  <button type="button" class="btn btn--ghost btn--small" id="mail-sync-pricing">Copy from Pricing page</button>
+                </div>
+                <p class="quote-range quote-range--compact" id="mail-quote-range"></p>
+                <div class="field">
+                  <label for="mail-quote-final">Final per metre (for mail)</label>
+                  <input id="mail-quote-final" type="number" class="input" min="0" step="0.01" />
+                </div>
+                <p class="mail-pricing-mini" id="mail-pricing-mini"></p>
+              </div>
+
+              <div class="panel">
+                <h2 class="panel__title">Response mail</h2>
+                <div class="field">
+                  <label for="mail-draft-to">To</label>
+                  <input id="mail-draft-to" type="email" class="input" readonly />
+                </div>
+                <div class="field">
+                  <label for="mail-draft-subject">Subject</label>
+                  <input id="mail-draft-subject" type="text" class="input" />
+                </div>
+                <div class="field">
+                  <label for="mail-draft-body">Body</label>
+                  <textarea id="mail-draft-body" class="input input--area" rows="10"></textarea>
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn--primary" id="btn-insert-quote">Insert quotation into mail</button>
+                  <button type="button" class="btn btn--ghost" id="btn-mail-pdf">PDF for attachment</button>
+                  <button type="button" class="btn btn--ghost" id="btn-copy-draft">Copy draft</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/data.js"></script>
+  <script>
+    document.getElementById("btn-logout").addEventListener("click", function () {
+      if (window.EliteAuth) window.EliteAuth.logout();
+    });
+  </script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

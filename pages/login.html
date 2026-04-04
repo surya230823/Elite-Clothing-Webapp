@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- Sign-in. Dashboard: ../index.html · See PROJECT_STRUCTURE.txt -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in — Elite Textile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/login.css" />
+  <script src="../assets/js/auth.js"></script>
+</head>
+<body class="login-page">
+  <div class="login-bg" aria-hidden="true"></div>
+
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="login-card__accent" aria-hidden="true"></div>
+      <div class="login-card__inner">
+        <header class="login-brand">
+          <div class="login-brand__row">
+            <div class="login-brand__mark" aria-hidden="true">
+              <span class="login-brand__mark-bg"></span>
+              <span class="login-brand__mark-letter">E</span>
+            </div>
+            <div class="login-brand__text">
+              <span class="login-brand__title">Elite Textile</span>
+              <span class="login-brand__tag">Operations</span>
+            </div>
+          </div>
+          <p class="login-brand__sub">Sign in to continue</p>
+        </header>
+
+        <form class="login-form" id="login-form" novalidate>
+          <div class="field">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              required
+              placeholder="Username"
+            />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Password"
+            />
+          </div>
+          <p class="login-error" id="login-error" role="alert">Invalid username or password.</p>
+          <button type="submit" class="login-submit">Sign in</button>
+        </form>
+
+        <details class="login-hint">
+          <summary>Demo access</summary>
+          <p>
+            <code id="hint-user"></code> · <code id="hint-pass"></code>
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <p class="login-footer">Orders · pricing · mail</p>
+  </div>
+
+  <script>
+    (function () {
+      if (window.EliteAuth && window.EliteAuth.isLoggedIn()) {
+        window.location.replace("../index.html");
+        return;
+      }
+      var userEl = document.getElementById("hint-user");
+      var passEl = document.getElementById("hint-pass");
+      if (window.EliteAuth) {
+        if (userEl) userEl.textContent = window.EliteAuth.DEMO_USERNAME;
+        if (passEl) passEl.textContent = window.EliteAuth.DEMO_PASSWORD;
+      }
+      var form = document.getElementById("login-form");
+      var err = document.getElementById("login-error");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        err.classList.remove("is-visible");
+        var u = document.getElementById("username").value.trim();
+        var p = document.getElementById("password").value;
+        if (window.EliteAuth.validateCredentials(u, p)) {
+          window.EliteAuth.setLoggedIn();
+          window.location.href = "../index.html";
+        } else {
+          err.classList.add("is-visible");
+          document.getElementById("password").value = "";
+          document.getElementById("password").focus();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
