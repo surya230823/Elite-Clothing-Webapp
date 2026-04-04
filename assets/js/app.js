@@ -48,15 +48,6 @@
     return { start: s, end: e };
   }
 
-  function applyTimelineDays(range, days) {
-    const end = new Date(range.end);
-    const start = new Date(end);
-    start.setDate(start.getDate() - Number(days) + 1);
-    start.setHours(0, 0, 0, 0);
-    const gStart = range.start > start ? range.start : start;
-    return { start: gStart, end: range.end };
-  }
-
   function setDefaultDates() {
     const end = new Date();
     const start = new Date();
@@ -70,7 +61,34 @@
     const fmt = (d) =>
       d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
     const el = document.getElementById("global-date-line");
-    if (el) el.textContent = `Date range: ${fmt(start)} — ${fmt(end)}`;
+    if (el) el.textContent = `${fmt(start)} → ${fmt(end)}`;
+  }
+
+  function toIsoDateLocal(d) {
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    return `${y}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  function applyDateRangePreset(preset) {
+    const end = new Date();
+    end.setHours(12, 0, 0, 0);
+    let start = new Date(end);
+    if (preset === "month") {
+      start = new Date(end.getFullYear(), end.getMonth(), 1);
+    } else {
+      const days = Number(preset);
+      if (!Number.isFinite(days) || days < 1) return;
+      start.setDate(start.getDate() - (days - 1));
+    }
+    const startEl = document.getElementById("global-start");
+    const endEl = document.getElementById("global-end");
+    if (!startEl || !endEl) return;
+    startEl.value = toIsoDateLocal(start);
+    endEl.value = toIsoDateLocal(end);
+    startEl.dispatchEvent(new Event("change", { bubbles: true }));
+    endEl.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   /* --- Navigation --- */
@@ -89,6 +107,8 @@
     });
     document.getElementById("page-title").textContent = TITLES[key] || key;
     updateDateLabel();
+    const stageWrap = document.getElementById("topbar-stage-wrap");
+    if (stageWrap) stageWrap.hidden = key !== "overview";
   }
 
   document.querySelectorAll(".nav-item").forEach((btn) => {
@@ -106,8 +126,9 @@
       .join("")}</tr>`;
   }
 
-  function renderTableBody(table, rows, columns) {
+  function renderTableBody(table, rows, columns, emptyMessage) {
     const tbody = table.querySelector("tbody");
+    const emptyMsg = emptyMessage || "No rows in this range.";
     tbody.innerHTML = rows
       .map(
         (row) =>
@@ -115,7 +136,7 @@
       )
       .join("");
     if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="${columns.length}" class="muted">No rows in this range.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="${columns.length}" class="muted">${emptyMsg}</td></tr>`;
     }
   }
 
@@ -132,6 +153,29 @@
     ongoing: null,
     received: null,
   };
+
+  const AWAITING_COLS = [
+    { label: "Order ID", sortKey: "id", render: (r) => r.id },
+    { label: "Vendor name", sortKey: "vendor", render: (r) => r.vendor },
+    { label: "Issue", sortKey: "issue", render: (r) => r.issue },
+    {
+      label: "Stage",
+      sortKey: "stage",
+      render: (r) => `<span class="${badgeClass(r.stage)}">${r.stage}</span>`,
+    },
+    {
+      label: "Waiting on",
+      sortKey: "waiting",
+      render: (r) => (r.waiting === "elite" ? "Elite" : "Vendor"),
+    },
+    {
+      label: "Actions",
+      render: (r) =>
+        `<button type="button" class="btn btn--ghost btn--small btn--cta" data-awaiting-detail="${escapeAttr(r.id)}">View details</button>`,
+    },
+  ];
+
+  let overviewAwaitingBase = [];
 
   function sortRows(rows, key, dir) {
     return [...rows].sort((a, b) => {
@@ -203,6 +247,41 @@
     } catch {
       /* ignore */
     }
+  }
+
+  function initDateRangePopover() {
+    const root = document.getElementById("date-range-popover");
+    const btn = document.getElementById("date-range-toggle");
+    const panel = document.getElementById("date-range-panel");
+    if (!root || !btn || !panel) return;
+
+    function setOpen(open) {
+      panel.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      root.classList.toggle("is-open", open);
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(panel.hidden);
+    });
+
+    document.addEventListener("click", () => setOpen(false));
+
+    root.addEventListener("click", (e) => e.stopPropagation());
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      if (panel.hidden) return;
+      setOpen(false);
+      btn.focus();
+    });
+
+    panel.querySelectorAll("[data-date-preset]").forEach((presetBtn) => {
+      presetBtn.addEventListener("click", () => {
+        applyDateRangePreset(presetBtn.getAttribute("data-date-preset"));
+      });
+    });
   }
 
   function initSidebarToggle() {
@@ -310,11 +389,57 @@
     window.setTimeout(done, 280);
   }
 
+  function filterAwaitingBySearch(base) {
+    const inp = document.getElementById("overview-awaiting-search");
+    const q = inp && inp.value ? inp.value.trim().toLowerCase() : "";
+    if (!q) return [...base];
+    return base.filter((r) => {
+      const blob = [r.id, r.vendor, r.issue, r.stage, r.handler || ""].join(" ").toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  function parseAwaitingSortKey(sk) {
+    if (!sk) return null;
+    const last = sk.lastIndexOf("-");
+    if (last <= 0) return null;
+    const key = sk.slice(0, last);
+    const dir = sk.slice(last + 1);
+    if (dir !== "asc" && dir !== "desc") return null;
+    return { key, dir };
+  }
+
+  function renderAwaitingTable(resetSort) {
+    const t = document.getElementById("table-awaiting");
+    if (!t) return;
+    const cols = AWAITING_COLS;
+    tableColumns.awaiting = cols;
+    let rows = filterAwaitingBySearch(overviewAwaitingBase);
+    if (resetSort) {
+      t.dataset.sortKey = "";
+    } else {
+      const parsed = parseAwaitingSortKey(t.dataset.sortKey);
+      if (parsed) rows = sortRows(rows, parsed.key, parsed.dir);
+    }
+    tableRowCache.awaiting = rows;
+    const emptyAwaiting =
+      rows.length === 0 && document.getElementById("overview-awaiting-search")?.value?.trim()
+        ? "No orders match your search."
+        : undefined;
+    if (resetSort) {
+      renderTableHead(t, cols);
+      renderTableBody(t, rows, cols, emptyAwaiting);
+      return;
+    }
+    renderTableBody(t, rows, cols, emptyAwaiting);
+    const parsed = parseAwaitingSortKey(t.dataset.sortKey);
+    t.querySelectorAll("th[data-sort]").forEach((h) => h.classList.remove("is-sorted"));
+    if (parsed) t.querySelector(`th[data-sort="${parsed.key}"]`)?.classList.add("is-sorted");
+  }
+
   /* --- Overview --- */
   function refreshOverview() {
-    const baseRange = getGlobalRange();
-    const days = document.getElementById("overview-timeline").value;
-    const range = applyTimelineDays(baseRange, days);
+    const range = getGlobalRange();
     const awaitingFilter = document.getElementById("overview-awaiting").value;
     const stageFilter = document.getElementById("overview-filter-stage")?.value || "";
     const vendorFilter = document.getElementById("overview-filter-vendor")?.value || "";
@@ -330,49 +455,26 @@
 
     const waitingElite = awaiting.filter((a) => a.waiting === "elite").length;
     const waitingVendor = awaiting.filter((a) => a.waiting === "vendor").length;
+    const vendorCount = new Set(awaiting.map((a) => a.vendor)).size;
 
     const metricsEl = document.getElementById("overview-metrics");
     metricsEl.innerHTML = [
-      { label: "Waiting on Elite", value: waitingElite },
-      { label: "Waiting on Vendor", value: waitingVendor },
+      { label: "Waiting on Elite", value: waitingElite, accent: true },
+      { label: "Waiting on Vendor", value: waitingVendor, accent: true },
+      { label: "Orders open", value: awaiting.length, accent: false },
+      { label: "Active vendors", value: vendorCount, accent: false },
     ]
       .map(
         (m) => `
-      <article class="metric-card metric-card--accent">
+      <article class="metric-card${m.accent ? " metric-card--accent" : ""}">
         <p class="metric-card__label">${m.label}</p>
         <p class="metric-card__value">${m.value}</p>
       </article>`
       )
       .join("");
 
-    const awaitingCols = [
-      { label: "Order ID", sortKey: "id", render: (r) => r.id },
-      { label: "Vendor name", sortKey: "vendor", render: (r) => r.vendor },
-      { label: "Issue", sortKey: "issue", render: (r) => r.issue },
-      {
-        label: "Stage",
-        sortKey: "stage",
-        render: (r) => `<span class="${badgeClass(r.stage)}">${r.stage}</span>`,
-      },
-      {
-        label: "Waiting on",
-        sortKey: "waiting",
-        render: (r) => (r.waiting === "elite" ? "Elite" : "Vendor"),
-      },
-      {
-        label: "Actions",
-        render: (r) =>
-          `<button type="button" class="btn btn--ghost btn--small btn--cta" data-awaiting-detail="${escapeAttr(r.id)}">View details</button>`,
-      },
-    ];
-
-    tableColumns.awaiting = awaitingCols;
-    tableRowCache.awaiting = [...awaiting];
-    const t = document.getElementById("table-awaiting");
-    t.dataset.sortKey = "";
-    t.querySelectorAll("th[data-sort]").forEach((h) => h.classList.remove("is-sorted"));
-    renderTableHead(t, awaitingCols);
-    renderTableBody(t, awaiting, awaitingCols);
+    overviewAwaitingBase = awaiting;
+    renderAwaitingTable(true);
   }
 
   const COMPLETED_COLS = [
@@ -772,10 +874,10 @@
 
   document.getElementById("global-start").addEventListener("change", refreshAll);
   document.getElementById("global-end").addEventListener("change", refreshAll);
-  document.getElementById("overview-timeline").addEventListener("change", refreshOverview);
   document.getElementById("overview-awaiting").addEventListener("change", refreshOverview);
   document.getElementById("overview-filter-stage").addEventListener("change", refreshOverview);
   document.getElementById("overview-filter-vendor").addEventListener("change", refreshOverview);
+  document.getElementById("overview-awaiting-search").addEventListener("input", () => renderAwaitingTable(false));
 
   document.getElementById("table-awaiting").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-awaiting-detail]");
@@ -826,6 +928,7 @@
 
   renderMailInbox();
   initSidebarToggle();
+  initDateRangePopover();
   showView("overview");
   refreshAll();
   runPricing();
