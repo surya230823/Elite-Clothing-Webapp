@@ -58,6 +58,12 @@
           </span>
           <span class="nav-item__text">Ongoing</span>
         </button>
+        <button type="button" class="nav-item" data-view="fabric-quality" title="Fabric quality selection">
+          <span class="nav-item__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg>
+          </span>
+          <span class="nav-item__text">Fabric quality</span>
+        </button>
         <button type="button" class="nav-item" data-view="pricing" title="Pricing">
           <span class="nav-item__icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
@@ -76,12 +82,52 @@
           </span>
           <span class="nav-item__text">Received</span>
         </button>
-        <button type="button" class="nav-item" data-view="mail" title="Mail">
-          <span class="nav-item__icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-          </span>
-          <span class="nav-item__text">Mail</span>
-        </button>
+        <div class="nav-mail" id="nav-mail">
+          <button
+            type="button"
+            class="nav-item nav-mail__trigger"
+            id="nav-mail-trigger"
+            data-view="mail"
+            title="Mail"
+            aria-expanded="false"
+            aria-haspopup="menu"
+            aria-controls="nav-mail-menu"
+          >
+            <span class="nav-item__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+            </span>
+            <span class="nav-item__text">Mail</span>
+            <span class="nav-mail__chevron" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </span>
+          </button>
+          <div class="nav-mail__panel" id="nav-mail-menu" role="menu" aria-label="Mail folders" hidden>
+            <button type="button" class="nav-mail__item" role="menuitem" data-mail-folder="inbox" data-mail-folder-label="Inbox">
+              <span class="nav-mail__item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+              </span>
+              <span class="nav-mail__item-text">Inbox</span>
+            </button>
+            <button type="button" class="nav-mail__item" role="menuitem" data-mail-folder="compose" data-mail-folder-label="Compose">
+              <span class="nav-mail__item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+              </span>
+              <span class="nav-mail__item-text">Compose</span>
+            </button>
+            <button type="button" class="nav-mail__item" role="menuitem" data-mail-folder="sent" data-mail-folder-label="Sent">
+              <span class="nav-mail__item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+              </span>
+              <span class="nav-mail__item-text">Sent</span>
+            </button>
+            <button type="button" class="nav-mail__item" role="menuitem" data-mail-folder="draft" data-mail-folder-label="Draft">
+              <span class="nav-mail__item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
+              </span>
+              <span class="nav-mail__item-text">Draft</span>
+            </button>
+          </div>
+        </div>
       </nav>
       <div class="sidebar__footer">
         <button type="button" class="btn-logout" id="btn-logout" title="Sign out" aria-label="Sign out">
@@ -136,6 +182,7 @@
               <span class="date-range-panel__subtitle">Pick dates or use a shortcut</span>
             </div>
             <div class="date-range-presets" role="group" aria-label="Quick date ranges">
+              <button type="button" class="date-range-preset" data-date-preset="all">All</button>
               <button type="button" class="date-range-preset" data-date-preset="7">7 days</button>
               <button type="button" class="date-range-preset" data-date-preset="30">30 days</button>
               <button type="button" class="date-range-preset" data-date-preset="90">90 days</button>
@@ -179,9 +226,27 @@
           <div class="metrics metrics--four" id="overview-metrics"></div>
 
           <div class="panel">
-            <div class="panel-awaiting-head">
-              <h2 class="panel__title panel__title--inline">Orders awaiting action</h2>
-              <div class="panel__filters" role="group" aria-label="Table filters">
+            <h2 class="panel__title">Orders awaiting action</h2>
+            <div class="panel-awaiting-toolbar">
+              <div class="panel__filters panel__filters--awaiting" role="group" aria-label="Table filters">
+                <div class="toolbar__group toolbar__group--search">
+                  <label for="overview-awaiting-search">Search</label>
+                  <div class="panel-search panel-search--toolbar">
+                    <span class="panel-search__icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                    </span>
+                    <input
+                      type="search"
+                      id="overview-awaiting-search"
+                      class="input panel-search__input"
+                      placeholder="Order ID, vendor, issue, stage, handler…"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
                 <div class="toolbar__group">
                   <label for="overview-filter-vendor">Vendor name</label>
                   <select id="overview-filter-vendor" class="select"></select>
@@ -196,23 +261,6 @@
                 </div>
               </div>
             </div>
-            <div class="panel-search">
-              <span class="panel-search__icon" aria-hidden="true">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </span>
-              <label class="sr-only" for="overview-awaiting-search">Search orders</label>
-              <input
-                type="search"
-                id="overview-awaiting-search"
-                class="input panel-search__input"
-                placeholder="Search order ID, vendor, issue, stage, handler…"
-                autocomplete="off"
-              />
-            </div>
-            <p class="panel__hint muted small">Cards and dropdowns use the same scope; search only filters the table below.</p>
             <div class="table-wrap">
               <table class="table table--sortable" id="table-awaiting" data-sort-key="">
                 <thead></thead>
@@ -261,70 +309,591 @@
 
         <!-- 3. Ongoing -->
         <section id="view-ongoing" class="view" hidden>
+          <div class="toolbar toolbar--wrap">
+            <p class="toolbar__hint toolbar__hint--block">Filters: date range (header) · vendor · material · pipeline stage · order in-charge</p>
+            <div class="toolbar__group">
+              <label for="filter-ongoing-vendor">Vendor</label>
+              <select id="filter-ongoing-vendor" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="filter-ongoing-material">Material</label>
+              <select id="filter-ongoing-material" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="filter-ongoing-progress">Pipeline stage</label>
+              <select id="filter-ongoing-progress" class="select"></select>
+            </div>
+            <div class="toolbar__group">
+              <label for="filter-ongoing-incharge">Order in-charge</label>
+              <select id="filter-ongoing-incharge" class="select"></select>
+            </div>
+          </div>
           <div class="table-wrap">
-            <table class="table table--sortable" id="table-ongoing" data-sort-key="">
+            <table class="table table--sortable table--ongoing" id="table-ongoing" data-sort-key="">
               <thead></thead>
               <tbody></tbody>
             </table>
           </div>
         </section>
 
-        <!-- 4. Pricing -->
+        <!-- 3b. Fabric quality selection -->
+        <section id="view-fabric-quality" class="view" hidden>
+          <div class="toolbar">
+            <p class="toolbar__hint">Define fabric construction, warp / weft lines, and certificate. Use a saved recipe to pre-fill.</p>
+          </div>
+          <div class="fqs-stack">
+              <div class="panel fqs-panel">
+                <h2 class="panel__title">Customer identification &amp; specification reference</h2>
+                <p class="panel__intro muted small">Link this entry to a customer when required; contact fields may be left blank. Choose an existing fabric-quality specification to load values into the form below.</p>
+                <div class="form-grid form-grid--fqs-ident">
+                  <div class="fqs-ident-stack">
+                    <div class="field">
+                      <label for="fqs-customer-search">Search email by customer name</label>
+                      <input id="fqs-customer-search" type="text" class="input" placeholder="Optional — type customer name" autocomplete="off" />
+                      <span class="field__hint muted small">Nullable</span>
+                    </div>
+                    <div class="field">
+                      <label for="fqs-email-trigger">Email</label>
+                      <div class="fqs-custom-select fqs-custom-select--drop-up" data-fqs-cs>
+                        <button
+                          type="button"
+                          class="fqs-custom-select__trigger"
+                          id="fqs-email-trigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false"
+                          aria-controls="fqs-email-listbox"
+                        >
+                          <span class="fqs-custom-select__value" id="fqs-email-display" aria-live="polite"></span>
+                          <span class="fqs-custom-select__chev" aria-hidden="true"></span>
+                        </button>
+                        <div class="fqs-custom-select__panel" id="fqs-email-panel" hidden>
+                          <ul class="fqs-custom-select__list" role="listbox" id="fqs-email-listbox"></ul>
+                        </div>
+                        <input type="hidden" id="fqs-email" value="" autocomplete="off" />
+                      </div>
+                      <span class="field__hint muted small">Optional — select a contact or leave as not specified</span>
+                    </div>
+                  </div>
+                  <div class="fqs-ident-stack">
+                    <div class="field">
+                      <label for="fqs-search-old-trigger">Search old fabric quality</label>
+                      <div class="fqs-custom-select" data-fqs-cs>
+                        <button
+                          type="button"
+                          class="fqs-custom-select__trigger"
+                          id="fqs-search-old-trigger"
+                          aria-haspopup="listbox"
+                          aria-expanded="false"
+                          aria-controls="fqs-search-old-listbox"
+                        >
+                          <span class="fqs-custom-select__value" id="fqs-search-old-display" aria-live="polite"></span>
+                          <span class="fqs-custom-select__chev" aria-hidden="true"></span>
+                        </button>
+                        <div class="fqs-custom-select__panel" id="fqs-search-old-panel" hidden>
+                          <ul class="fqs-custom-select__list" role="listbox" id="fqs-search-old-listbox"></ul>
+                        </div>
+                        <input type="hidden" id="fqs-search-old" value="" autocomplete="off" />
+                      </div>
+                      <span class="field__hint muted small">Select a saved specification to populate the form below</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel fqs-panel fqs-general-panel" id="fqs-panel-general">
+                <h2 class="panel__title">General fabric properties</h2>
+                <div class="fqs-general-panel__compact" id="fqs-general-compact">
+                  <p class="fqs-general-panel__compact-text muted small" id="fqs-general-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="fqs-general-edit">Edit</button>
+                </div>
+                <div class="fqs-general-panel__body">
+                <div class="table-wrap table-wrap--fqs">
+                  <table class="table table--fqs-axis table--fqs-general">
+                    <thead>
+                      <tr>
+                        <th scope="col">Material</th>
+                        <th scope="col">Reed</th>
+                        <th scope="col">Pick</th>
+                        <th scope="col">Width</th>
+                        <th scope="col">Fabric certificate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <select id="fqs-material" class="select select--table" aria-label="Material">
+                            <option value="">Select material</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="polyester">Polyester</option>
+                            <option value="linen-blend">Linen blend</option>
+                            <option value="viscose">Viscose</option>
+                            <option value="wool">Wool</option>
+                          </select>
+                        </td>
+                        <td>
+                          <input id="fqs-reed" type="number" class="input" min="0" step="1" placeholder="e.g. 72" aria-label="Reed" />
+                        </td>
+                        <td>
+                          <input id="fqs-pick" type="number" class="input" min="0" step="1" placeholder="e.g. 48" aria-label="Pick" />
+                        </td>
+                        <td>
+                          <input id="fqs-width" type="number" class="input" min="0" step="0.01" placeholder="e.g. 60" aria-label="Width" />
+                        </td>
+                        <td>
+                          <select id="fqs-certificate" class="select select--table" aria-label="Fabric certificate">
+                            <option value="">Select certificate</option>
+                            <option value="oeko">OEKO-TEX</option>
+                            <option value="gots">GOTS</option>
+                            <option value="internal">Internal / none declared</option>
+                          </select>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="form-actions fqs-step-actions">
+                  <button type="button" class="btn btn--primary btn--small" id="fqs-general-next" disabled>Next</button>
+                </div>
+                </div>
+              </div>
+
+              <div class="panel fqs-panel fqs-progress-panel is-locked" id="fqs-panel-warp" data-fqs-step="warp">
+                <div class="fqs-progress-panel__locked-head">
+                  <h2 class="panel__title fqs-progress-panel__locked-title">Warp details</h2>
+                </div>
+                <div class="fqs-progress-panel__body">
+                  <div class="fqs-section-head">
+                    <h2 class="panel__title" id="fqs-panel-warp-title">Warp details</h2>
+                    <p class="muted small fqs-section-hint">Search and edit in each row · up to 3 warps</p>
+                  </div>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis">
+                      <thead>
+                        <tr>
+                          <th class="table--fqs-axis__label"></th>
+                          <th>Quality</th>
+                          <th>Count</th>
+                          <th>Type</th>
+                          <th>Texture</th>
+                          <th># ends</th>
+                          <th class="table--fqs-axis__check">Extra ends</th>
+                          <th class="table--fqs-axis__actions"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="fqs-warp-tbody"></tbody>
+                    </table>
+                  </div>
+                  <div class="form-actions fqs-row-actions">
+                    <button type="button" class="btn btn--ghost btn--small" id="fqs-warp-add">Add warp row</button>
+                    <span class="muted small" id="fqs-warp-add-hint">Up to 3 rows</span>
+                  </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="fqs-warp-next" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel fqs-panel fqs-progress-panel is-locked" id="fqs-panel-weft" data-fqs-step="weft">
+                <div class="fqs-progress-panel__locked-head">
+                  <h2 class="panel__title fqs-progress-panel__locked-title">Weft details</h2>
+                </div>
+                <div class="fqs-progress-panel__body">
+                  <div class="fqs-section-head">
+                    <h2 class="panel__title" id="fqs-panel-weft-title">Weft details</h2>
+                    <p class="muted small fqs-section-hint">Search and edit in each row · up to 3 wefts</p>
+                  </div>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis">
+                      <thead>
+                        <tr>
+                          <th class="table--fqs-axis__label"></th>
+                          <th>Quality</th>
+                          <th>Count</th>
+                          <th>Type</th>
+                          <th>Texture</th>
+                          <th># picks</th>
+                          <th class="table--fqs-axis__check">Extra picks</th>
+                          <th class="table--fqs-axis__actions"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="fqs-weft-tbody"></tbody>
+                    </table>
+                  </div>
+                  <div class="form-actions fqs-row-actions">
+                    <button type="button" class="btn btn--ghost btn--small" id="fqs-weft-add">Add weft row</button>
+                    <span class="muted small" id="fqs-weft-add-hint">Up to 3 rows</span>
+                  </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="fqs-weft-next" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel fqs-panel fqs-panel--review fqs-progress-panel is-locked" id="fqs-panel-review" data-fqs-step="review">
+                <div class="fqs-progress-panel__locked-head">
+                  <h2 class="panel__title fqs-progress-panel__locked-title">Review final</h2>
+                </div>
+                <div class="fqs-progress-panel__body">
+                  <h2 class="panel__title" id="fqs-panel-review-title">Review final</h2>
+                  <div class="form-grid">
+                    <div class="field field--full">
+                      <label for="fqs-fabric-quality-summary">Fabric quality (summary)</label>
+                      <output id="fqs-fabric-quality-summary" class="fqs-output" for="fqs-material fqs-reed fqs-pick fqs-width fqs-certificate"></output>
+                    </div>
+                  </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary" id="fqs-review-next" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <!-- 4. Pricing (stepped flow — layout aligned with Fabric quality selection) -->
         <section id="view-pricing" class="view" hidden>
-          <div class="pricing-grid">
-            <form class="panel form-panel" id="pricing-form">
-              <h2 class="panel__title">Pricing overview &amp; variables</h2>
-              <p class="panel__intro muted small">Enter costing variables. The system suggests a per-metre range; edit the final figure and export a PDF to attach in mail.</p>
+          <div class="toolbar">
+            <p class="toolbar__hint">Fill <strong>Fabric specifications</strong> (or use <strong>Initial selection</strong> to pick a saved fabric), then use <strong>Next</strong> on each step. Demo values are stand-ins for backend data.</p>
+          </div>
+          <div class="fqs-stack pricing-stack" id="pricing-flow-root">
+            <div class="panel fqs-panel" id="prs-panel-initial">
+              <h2 class="panel__title">Initial selection &amp; customer</h2>
               <div class="form-grid">
                 <div class="field">
-                  <label for="pf-material">Material type</label>
-                  <input id="pf-material" name="material" type="text" class="input" placeholder="e.g. 100% cotton, polyester" value="100% cotton" />
+                  <label for="prs-customer-search">Search email by customer name</label>
+                  <input type="text" id="prs-customer-search" class="input" placeholder="Customer name" autocomplete="organization" />
                 </div>
                 <div class="field">
-                  <label for="pf-readpick">Read / pick (yarn count)</label>
-                  <input id="pf-readpick" name="readpick" type="number" class="input" min="1" step="1" value="40" />
+                  <label for="prs-email">Email</label>
+                  <input type="email" id="prs-email" class="input" placeholder="contact@example.com" autocomplete="email" />
                 </div>
-                <div class="field">
-                  <label for="pf-rawprice">Raw material price (per unit)</label>
-                  <input id="pf-rawprice" name="rawprice" type="number" class="input" min="0" step="0.01" value="12.5" />
-                </div>
-                <div class="field">
-                  <label for="pf-width">Cloth width (m)</label>
-                  <input id="pf-width" name="width" type="number" class="input" min="0.1" step="0.01" value="1.5" />
-                </div>
-                <div class="field field--full">
-                  <label for="pf-sample">Sample type</label>
-                  <textarea id="pf-sample" name="sample" class="input input--area" rows="2" placeholder="e.g. 3 stripes blue, 2 red, 1 yellow">3 stripes blue, 2 red, 1 yellow</textarea>
-                </div>
-                <div class="field">
-                  <label for="pf-crimp">Crimp %</label>
-                  <input id="pf-crimp" name="crimp" type="number" class="input" min="0" step="0.1" value="2.5" />
-                </div>
-                <div class="field">
-                  <label for="pf-shrink">Shrinkage %</label>
-                  <input id="pf-shrink" name="shrink" type="number" class="input" min="0" step="0.1" value="3" />
-                </div>
-                <div class="field">
-                  <label for="pf-buffer">Buffer %</label>
-                  <input id="pf-buffer" name="buffer" type="number" class="input" min="0" step="0.1" value="8" />
+                <div class="field field--full prs-fabric-quality-field">
+                  <label for="prs-fabric-quality-trigger">Select fabric quality</label>
+                  <div class="prs-fabric-quality-row">
+                    <div class="fqs-custom-select fqs-custom-select--drop-up" data-fqs-cs>
+                      <button
+                        type="button"
+                        class="fqs-custom-select__trigger"
+                        id="prs-fabric-quality-trigger"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-controls="prs-fabric-quality-listbox"
+                      >
+                        <span class="fqs-custom-select__value" id="prs-fabric-quality-display" aria-live="polite"></span>
+                        <span class="fqs-custom-select__chev" aria-hidden="true"></span>
+                      </button>
+                      <div class="fqs-custom-select__panel" id="prs-fabric-quality-panel" hidden>
+                        <ul class="fqs-custom-select__list" role="listbox" id="prs-fabric-quality-listbox"></ul>
+                      </div>
+                      <input type="hidden" id="prs-fabric-quality" value="" autocomplete="off" />
+                    </div>
+                    <button type="button" class="btn btn--ghost btn--small" id="prs-fabric-create-new">Create new</button>
+                  </div>
                 </div>
               </div>
-              <div class="form-actions">
-                <button type="submit" class="btn btn--primary">Calculate quotation</button>
-              </div>
-            </form>
+            </div>
 
-            <div class="panel quote-panel">
-              <h2 class="panel__title">Sample quotation</h2>
-              <p class="quote-range" id="quote-range">Submit the form to see suggested price range.</p>
-              <div class="field">
-                <label for="quote-final">Final quotation (per metre, editable)</label>
-                <input id="quote-final" type="number" class="input" min="0" step="0.01" />
+            <div class="panel fqs-panel fqs-progress-panel prs-progress prs-collapse-panel" id="prs-panel-auto">
+              <div class="fqs-progress-panel__locked-head">
+                <h2 class="panel__title fqs-progress-panel__locked-title">Fabric specifications</h2>
               </div>
-              <p class="quote-note" id="quote-breakdown"></p>
-              <div class="form-actions">
-                <button type="button" class="btn btn--primary" id="btn-print-quote">Export PDF (for mail attachment)</button>
+              <div class="fqs-progress-panel__body">
+                <div class="prs-collapse-panel__compact">
+                  <p class="prs-collapse-panel__compact-text muted small" id="prs-auto-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="prs-auto-edit">Edit</button>
+                </div>
+                <div class="prs-collapse-panel__body">
+                  <p class="muted small panel__intro">Reed, pick, and width in inches; loom and table picks are editable for this run.</p>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Reed</th>
+                          <th scope="col">Pick</th>
+                          <th scope="col">Reed on loom</th>
+                          <th scope="col">Pick on table</th>
+                          <th scope="col">Width (in)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-reed" type="number" class="input select--table" min="0" step="1" placeholder="e.g. 72" aria-label="Reed" /></td>
+                          <td><input id="prs-pick" type="number" class="input select--table" min="0" step="1" placeholder="e.g. 48" aria-label="Pick" /></td>
+                          <td><input id="prs-reed-loom" type="number" class="input select--table" min="0" step="1" placeholder="e.g. 72" aria-label="Reed on loom" /></td>
+                          <td><input id="prs-pick-table" type="number" class="input select--table" min="0" step="1" placeholder="e.g. 48" aria-label="Pick on table" /></td>
+                          <td><input id="prs-width" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 60" aria-label="Width in inches" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="prs-next-auto" disabled>Next</button>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div class="panel fqs-panel fqs-progress-panel prs-progress prs-collapse-panel is-locked" id="prs-panel-overall">
+              <div class="fqs-progress-panel__locked-head">
+                <h2 class="panel__title fqs-progress-panel__locked-title">Get overall variables</h2>
+              </div>
+              <div class="fqs-progress-panel__body">
+                <div class="prs-collapse-panel__compact">
+                  <p class="prs-collapse-panel__compact-text muted small" id="prs-overall-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="prs-overall-edit">Edit</button>
+                </div>
+                <div class="prs-collapse-panel__body">
+                  <p class="muted small panel__intro">Enter overall costing variables (all columns required to continue).</p>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Pick rate</th>
+                          <th scope="col">Finishing £/m</th>
+                          <th scope="col">Kg/m factor</th>
+                          <th scope="col">Overheads £/m</th>
+                          <th scope="col">Process loss %</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-pick-rate" type="number" class="input select--table" min="0" step="0.001" placeholder="e.g. 0.142" aria-label="Pick rate" /></td>
+                          <td><input id="prs-finishing-cost" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 2.35" aria-label="Finishing cost per metre (£)" /></td>
+                          <td><input id="prs-kg-conv" type="number" class="input select--table" min="0" step="0.001" placeholder="e.g. 0.28" aria-label="Kg per m conversion factor" /></td>
+                          <td><input id="prs-overheads" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 0.85" aria-label="Overheads per metre (£)" /></td>
+                          <td><input id="prs-process-loss" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 4.5" aria-label="Process loss percent" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="prs-next-overall" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="prs-warp-weft-final-cluster">
+            <div class="panel fqs-panel fqs-progress-panel prs-progress prs-collapse-panel is-locked" id="prs-panel-warp">
+              <div class="fqs-progress-panel__locked-head">
+                <h2 class="panel__title fqs-progress-panel__locked-title">Get warp variables</h2>
+              </div>
+              <div class="fqs-progress-panel__body">
+                <div class="prs-collapse-panel__compact">
+                  <p class="prs-collapse-panel__compact-text muted small" id="prs-warp-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="prs-warp-edit">Edit</button>
+                </div>
+                <div class="prs-collapse-panel__body">
+                  <p class="muted small panel__intro">One block per warp from fabric quality (demo: two warps).</p>
+                  <div class="prs-axis-block">
+                  <h3 class="prs-axis-block__title" id="prs-warp-block-1-heading">Warp 1 · CPT 40 S</h3>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Yarn £/kg</th>
+                          <th scope="col">Dye £/kg</th>
+                          <th scope="col">Crimp %</th>
+                          <th scope="col">Dye waste %</th>
+                          <th scope="col">Warping £/m</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-w1-yarn" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 4.2" aria-label="Yarn price per kg (£)" /></td>
+                          <td><input id="prs-w1-dye" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 1.85" aria-label="Dyeing price per kg (£)" /></td>
+                          <td><input id="prs-w1-crimp" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 2.4" aria-label="Crimp percent" /></td>
+                          <td><input id="prs-w1-dye-waste" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 3.2" aria-label="Dyeing wastage percent" /></td>
+                          <td><input id="prs-w1-warping" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 0.12" aria-label="Warping and sizing per metre (£)" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="prs-axis-block">
+                  <h3 class="prs-axis-block__title" id="prs-warp-block-2-heading">Warp 2 · CPT 2/40 S</h3>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Yarn £/kg</th>
+                          <th scope="col">Dye £/kg</th>
+                          <th scope="col">Crimp %</th>
+                          <th scope="col">Dye waste %</th>
+                          <th scope="col">Warping £/m</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-w2-yarn" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 4.55" aria-label="Yarn price per kg (£)" /></td>
+                          <td><input id="prs-w2-dye" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 1.9" aria-label="Dyeing price per kg (£)" /></td>
+                          <td><input id="prs-w2-crimp" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 2.1" aria-label="Crimp percent" /></td>
+                          <td><input id="prs-w2-dye-waste" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 3.0" aria-label="Dyeing wastage percent" /></td>
+                          <td><input id="prs-w2-warping" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 0.11" aria-label="Warping and sizing per metre (£)" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="prs-next-warp" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel fqs-panel fqs-progress-panel prs-progress prs-collapse-panel is-locked" id="prs-panel-weft">
+              <div class="fqs-progress-panel__locked-head">
+                <h2 class="panel__title fqs-progress-panel__locked-title">Get weft variables</h2>
+              </div>
+              <div class="fqs-progress-panel__body">
+                <div class="prs-collapse-panel__compact">
+                  <p class="prs-collapse-panel__compact-text muted small" id="prs-weft-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="prs-weft-edit">Edit</button>
+                </div>
+                <div class="prs-collapse-panel__body">
+                  <p class="muted small panel__intro">One block per weft from fabric quality (demo: two wefts).</p>
+                  <div class="prs-axis-block">
+                  <h3 class="prs-axis-block__title" id="prs-weft-block-1-heading">Weft 1 · CPT 40 S</h3>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Yarn £/kg</th>
+                          <th scope="col">Dye £/kg</th>
+                          <th scope="col">Dye waste %</th>
+                          <th scope="col">Selvedge (m)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-t1-yarn" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 4.15" aria-label="Yarn price per kg (£)" /></td>
+                          <td><input id="prs-t1-dye" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 1.82" aria-label="Dyeing price per kg (£)" /></td>
+                          <td><input id="prs-t1-dye-waste" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 3.4" aria-label="Dyeing wastage percent" /></td>
+                          <td><input id="prs-t1-selvedge" type="number" class="input select--table" min="0" step="0.001" placeholder="e.g. 0.02" aria-label="Selvedge in metres" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="prs-axis-block">
+                  <h3 class="prs-axis-block__title" id="prs-weft-block-2-heading">Weft 2 · CPT 2/40 S</h3>
+                  <div class="table-wrap table-wrap--fqs">
+                    <table class="table table--fqs-axis table--fqs-general">
+                      <thead>
+                        <tr>
+                          <th scope="col">Yarn £/kg</th>
+                          <th scope="col">Dye £/kg</th>
+                          <th scope="col">Dye waste %</th>
+                          <th scope="col">Selvedge (m)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><input id="prs-t2-yarn" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 4.48" aria-label="Yarn price per kg (£)" /></td>
+                          <td><input id="prs-t2-dye" type="number" class="input select--table" min="0" step="0.01" placeholder="e.g. 1.88" aria-label="Dyeing price per kg (£)" /></td>
+                          <td><input id="prs-t2-dye-waste" type="number" class="input select--table" min="0" step="0.1" placeholder="e.g. 3.1" aria-label="Dyeing wastage percent" /></td>
+                          <td><input id="prs-t2-selvedge" type="number" class="input select--table" min="0" step="0.001" placeholder="e.g. 0.02" aria-label="Selvedge in metres" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--primary btn--small" id="prs-next-weft" disabled>Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel fqs-panel fqs-progress-panel prs-progress prs-collapse-panel is-locked" id="prs-panel-final">
+              <div class="fqs-progress-panel__locked-head">
+                <h2 class="panel__title fqs-progress-panel__locked-title">Quotation pricing</h2>
+              </div>
+              <div class="fqs-progress-panel__body">
+                <div class="prs-collapse-panel__compact">
+                  <p class="prs-collapse-panel__compact-text muted small" id="prs-final-compact-text"></p>
+                  <button type="button" class="btn btn--ghost btn--small" id="prs-final-edit">Edit</button>
+                </div>
+                <div class="prs-collapse-panel__body">
+                  <p class="muted small panel__intro">
+                    Cost price is calculated automatically from fabric specifications and the costing steps above. Adjust ops buffer and profit % for the customer-facing total.
+                  </p>
+                  <p class="muted small panel__intro" id="quote-range" aria-live="polite">
+                    Complete prior steps to see the suggested range here.
+                  </p>
+                  <input type="hidden" id="quote-final" value="" autocomplete="off" />
+                  <div class="table-wrap table-wrap--fqs">
+                  <table class="table table--fqs-axis table--fqs-general" id="quotation-pricing-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Cost price</th>
+                        <th scope="col">Ops buffer</th>
+                        <th scope="col">Profit %</th>
+                        <th scope="col">Final cost</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input
+                            id="qprice-cost-2"
+                            type="number"
+                            class="input select--table input--readonly-calc"
+                            min="0"
+                            step="0.01"
+                            readonly
+                            tabindex="-1"
+                            placeholder="—"
+                            title="Calculated from fabric specs and costing steps above"
+                            aria-label="Cost price (calculated automatically)"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            id="qprice-ops-2"
+                            type="number"
+                            class="input select--table"
+                            min="0"
+                            step="0.01"
+                            value="9"
+                            aria-label="Ops buffer"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            id="qprice-profit-2"
+                            type="number"
+                            class="input select--table"
+                            min="0"
+                            step="0.1"
+                            value="6"
+                            aria-label="Profit percent"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            id="qprice-final-2"
+                            type="text"
+                            class="input select--table input--readonly-calc"
+                            readonly
+                            tabindex="-1"
+                            value=""
+                            placeholder="—"
+                            aria-label="Final cost"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                  <p class="muted small panel__intro quote-breakdown" id="quote-breakdown"></p>
+                  <div class="form-actions fqs-step-actions">
+                    <button type="button" class="btn btn--ghost btn--small" id="btn-print-quote">Export PDF (mail)</button>
+                    <button type="button" class="btn btn--primary btn--small" id="prs-quotation-save">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </section>
@@ -350,86 +919,145 @@
           </div>
         </section>
 
-        <!-- 7. Mail response -->
+        <!-- 7. Mail -->
         <section id="view-mail" class="view" hidden>
           <div class="mail-layout mail-layout--wide">
-            <div class="panel">
-              <h2 class="panel__title">Mail inbox</h2>
-              <ul class="mail-inbox" id="mail-inbox"></ul>
+            <div class="panel mail-folder-panel">
+              <div class="mail-context" id="mail-context">
+                <div class="mail-inbox-wrap" id="mail-inbox-wrap" hidden>
+                  <h2 class="mail-inbox-sidebar__title" id="mail-inbox-heading">
+                    <span class="mail-inbox-sidebar__title-text">Mail inbox</span>
+                    <span class="mail-inbox-sidebar__count" id="mail-inbox-count" aria-label="Messages in inbox"></span>
+                  </h2>
+                  <ul class="mail-inbox-list" id="mail-inbox"></ul>
+                  <div class="mail-inbox-toolbar" role="group" aria-label="Inbox actions">
+                    <button type="button" class="mail-inbox-pill" id="btn-mail-older">Show older mails</button>
+                    <button type="button" class="mail-inbox-pill" id="btn-mail-sample-input">Add sample input</button>
+                    <button type="button" class="mail-inbox-pill" id="btn-mail-attachment">Add attachment</button>
+                    <button type="button" class="mail-inbox-pill" id="btn-mail-compose-draft">Compose and draft mail</button>
+                  </div>
+                  <button type="button" class="mail-inbox-cta-send" id="btn-mail-send-generate" disabled aria-disabled="true" title="Save a draft or add message text in Compose first">Send / generate mail</button>
+                </div>
+                <ul class="mail-inbox mail-draft-list" id="mail-draft-list" hidden></ul>
+                <ul class="mail-inbox mail-sent-list" id="mail-sent-list" hidden></ul>
+                <p class="mail-context-hint muted small" id="mail-context-compose-hint" hidden>New message — use the compose pane.</p>
+              </div>
             </div>
             <div class="mail-main">
-              <div class="panel">
-                <h2 class="panel__title">Requirements overview</h2>
-                <div id="mail-summary" class="mail-summary muted">Select a message to see a short summary of what the sender needs.</div>
+              <div class="mail-pane mail-pane-inbox" id="mail-pane-inbox" data-mail-pane="inbox" hidden>
+                <div class="mail-inbox-main">
+                  <section class="mail-req-overview">
+                    <h2 class="mail-req-overview__title">Requirements overview</h2>
+                    <div id="mail-summary" class="mail-req-overview__box muted">
+                      Select a thread to read a short summary of what the sender needs.
+                    </div>
+                  </section>
+                  <p class="mail-detail-empty muted" id="mail-detail-empty">Select a message in the inbox to view the full thread.</p>
+                  <article class="mail-detail-card" id="mail-detail-card" hidden>
+                    <h3 class="mail-detail-card__title" id="mail-detail-title"></h3>
+                    <p class="mail-detail-card__meta" id="mail-detail-meta"></p>
+                    <div class="mail-detail-card__rule" aria-hidden="true"></div>
+                    <div class="mail-detail-card__body" id="mail-detail-body"></div>
+                    <div class="mail-detail-card__footer">
+                      <button type="button" class="btn-mail-reply-configure" id="btn-mail-reply-compose" disabled>Reply &amp; configure</button>
+                    </div>
+                  </article>
+                </div>
               </div>
 
-              <div class="panel">
-                <h2 class="panel__title">Pricing inputs</h2>
-                <p class="muted small panel__intro">Same variables as Pricing overview. Calculate here, then build the mail below.</p>
-                <form class="form-grid mail-pricing-grid" id="mail-pricing-form">
-                  <div class="field">
-                    <label for="mpf-material">Material type</label>
-                    <input id="mpf-material" type="text" class="input" value="100% cotton" />
+              <div class="mail-pane" id="mail-pane-draft" data-mail-pane="draft" hidden>
+                <div class="panel">
+                  <h2 class="panel__title">Draft preview</h2>
+                  <div id="mail-draft-preview" class="mail-draft-preview muted">Select a saved draft or save one from Compose.</div>
+                  <div class="form-actions mail-pane-actions">
+                    <button type="button" class="btn btn--primary" id="btn-mail-edit-compose" disabled>Edit in Compose</button>
                   </div>
-                  <div class="field">
-                    <label for="mpf-readpick">Read / pick</label>
-                    <input id="mpf-readpick" type="number" class="input" min="1" step="1" value="40" />
-                  </div>
-                  <div class="field">
-                    <label for="mpf-rawprice">Raw material price</label>
-                    <input id="mpf-rawprice" type="number" class="input" min="0" step="0.01" value="12.5" />
-                  </div>
-                  <div class="field">
-                    <label for="mpf-width">Width (m)</label>
-                    <input id="mpf-width" type="number" class="input" min="0.1" step="0.01" value="1.5" />
-                  </div>
-                  <div class="field field--full">
-                    <label for="mpf-sample">Sample type</label>
-                    <textarea id="mpf-sample" class="input input--area" rows="2">3 stripes blue, 2 red, 1 yellow</textarea>
-                  </div>
-                  <div class="field">
-                    <label for="mpf-crimp">Crimp %</label>
-                    <input id="mpf-crimp" type="number" class="input" step="0.1" value="2.5" />
-                  </div>
-                  <div class="field">
-                    <label for="mpf-shrink">Shrinkage %</label>
-                    <input id="mpf-shrink" type="number" class="input" step="0.1" value="3" />
-                  </div>
-                  <div class="field">
-                    <label for="mpf-buffer">Buffer %</label>
-                    <input id="mpf-buffer" type="number" class="input" step="0.1" value="8" />
-                  </div>
-                </form>
-                <div class="form-actions">
-                  <button type="button" class="btn btn--primary" id="btn-mail-calc">Calculate quotation</button>
-                  <button type="button" class="btn btn--ghost btn--small" id="mail-sync-pricing">Copy from Pricing page</button>
                 </div>
-                <p class="quote-range quote-range--compact" id="mail-quote-range"></p>
-                <div class="field">
-                  <label for="mail-quote-final">Final per metre (for mail)</label>
-                  <input id="mail-quote-final" type="number" class="input" min="0" step="0.01" />
-                </div>
-                <p class="mail-pricing-mini" id="mail-pricing-mini"></p>
               </div>
 
-              <div class="panel">
-                <h2 class="panel__title">Response mail</h2>
-                <div class="field">
-                  <label for="mail-draft-to">To</label>
-                  <input id="mail-draft-to" type="email" class="input" readonly />
+              <div class="mail-pane" id="mail-pane-compose" data-mail-pane="compose" hidden>
+                <div class="panel">
+                  <h2 class="panel__title">Pricing</h2>
+                  <p class="muted small panel__intro">Quick calculator for compose. Use <strong>Pricing</strong> in the nav for the full stepped costing flow; <strong>Copy from Pricing page</strong> pulls those values here.</p>
+                  <form class="form-grid mail-pricing-grid" id="mail-pricing-form">
+                    <div class="field">
+                      <label for="mpf-material">Material type</label>
+                      <input id="mpf-material" type="text" class="input" value="100% cotton" />
+                    </div>
+                    <div class="field">
+                      <label for="mpf-readpick">Read / pick</label>
+                      <input id="mpf-readpick" type="number" class="input" min="1" step="1" value="40" />
+                    </div>
+                    <div class="field">
+                      <label for="mpf-rawprice">Raw material price</label>
+                      <input id="mpf-rawprice" type="number" class="input" min="0" step="0.01" value="12.5" />
+                    </div>
+                    <div class="field">
+                      <label for="mpf-width">Width (m)</label>
+                      <input id="mpf-width" type="number" class="input" min="0.1" step="0.01" value="1.5" />
+                    </div>
+                    <div class="field field--full">
+                      <label for="mpf-sample">Sample type</label>
+                      <textarea id="mpf-sample" class="input input--area" rows="2">3 stripes blue, 2 red, 1 yellow</textarea>
+                    </div>
+                    <div class="field">
+                      <label for="mpf-crimp">Crimp %</label>
+                      <input id="mpf-crimp" type="number" class="input" step="0.1" value="2.5" />
+                    </div>
+                    <div class="field">
+                      <label for="mpf-shrink">Shrinkage %</label>
+                      <input id="mpf-shrink" type="number" class="input" step="0.1" value="3" />
+                    </div>
+                    <div class="field">
+                      <label for="mpf-buffer">Buffer %</label>
+                      <input id="mpf-buffer" type="number" class="input" step="0.1" value="8" />
+                    </div>
+                  </form>
+                  <div class="form-actions">
+                    <button type="button" class="btn btn--primary" id="btn-mail-calc">Calculate quotation</button>
+                    <button type="button" class="btn btn--ghost btn--small" id="mail-sync-pricing">Copy from Pricing page</button>
+                  </div>
+                  <p class="quote-range quote-range--compact" id="mail-quote-range"></p>
+                  <div class="field">
+                    <label for="mail-quote-final">Final per metre (for mail)</label>
+                    <input id="mail-quote-final" type="number" class="input" min="0" step="0.01" />
+                  </div>
+                  <p class="mail-pricing-mini" id="mail-pricing-mini"></p>
                 </div>
-                <div class="field">
-                  <label for="mail-draft-subject">Subject</label>
-                  <input id="mail-draft-subject" type="text" class="input" />
+
+                <div class="panel">
+                  <h2 class="panel__title">Compose</h2>
+                  <input type="hidden" id="mail-compose-draft-id" value="" />
+                  <div class="field">
+                    <label for="mail-draft-to">To</label>
+                    <input id="mail-draft-to" type="text" class="input" placeholder="name@example.com" autocomplete="email" />
+                  </div>
+                  <div class="field">
+                    <label for="mail-draft-subject">Subject</label>
+                    <input id="mail-draft-subject" type="text" class="input" />
+                  </div>
+                  <div class="field">
+                    <label for="mail-draft-body">Body</label>
+                    <textarea id="mail-draft-body" class="input input--area" rows="10"></textarea>
+                  </div>
+                  <div class="form-actions form-actions--wrap">
+                    <button type="button" class="btn btn--ghost" id="btn-mail-save-draft">Save draft</button>
+                    <button type="button" class="btn btn--primary" id="btn-mail-send">Send</button>
+                    <button type="button" class="btn btn--ghost" id="btn-mail-clear">Clear</button>
+                    <button type="button" class="btn btn--ghost" id="btn-copy-draft">Copy</button>
+                    <button type="button" class="btn btn--ghost" id="btn-insert-quote">Insert quote</button>
+                    <button type="button" class="btn btn--ghost" id="btn-mail-pdf">PDF</button>
+                  </div>
                 </div>
-                <div class="field">
-                  <label for="mail-draft-body">Body</label>
-                  <textarea id="mail-draft-body" class="input input--area" rows="10"></textarea>
-                </div>
-                <div class="form-actions">
-                  <button type="button" class="btn btn--primary" id="btn-insert-quote">Insert quotation into mail</button>
-                  <button type="button" class="btn btn--ghost" id="btn-mail-pdf">PDF for attachment</button>
-                  <button type="button" class="btn btn--ghost" id="btn-copy-draft">Copy draft</button>
+              </div>
+
+              <div class="mail-pane" id="mail-pane-sent" data-mail-pane="sent" hidden>
+                <div class="panel">
+                  <h2 class="panel__title">Sent</h2>
+                  <div id="mail-sent-detail" class="mail-sent-detail">
+                    <p class="mail-empty-state muted" id="mail-sent-empty">No messages sent in this session yet. Items appear here after you use <strong>Send</strong> in Compose.</p>
+                    <div id="mail-sent-detail-body" class="mail-sent-detail-body" hidden></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,6 +1065,35 @@
         </section>
       </div>
     </main>
+  </div>
+
+  <!-- Embedded fabric quality flow from Pricing → Create new -->
+  <div
+    id="fabric-quality-modal"
+    class="modal fabric-quality-modal"
+    hidden
+    aria-hidden="true"
+  >
+    <div class="modal__backdrop" data-fabric-quality-modal-dismiss aria-hidden="true"></div>
+    <div
+      class="modal__dialog modal__dialog--fabric-quality"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fabric-quality-modal-title"
+    >
+      <button type="button" class="modal__close" id="fabric-quality-modal-close-x" aria-label="Close">
+        &times;
+      </button>
+      <h2 id="fabric-quality-modal-title" class="modal__title">New fabric quality</h2>
+      <p class="muted small fabric-quality-modal__intro">
+        Enter construction details below, then use <strong>Apply to pricing</strong> to fill the Pricing page. Cancel returns you to Pricing without saving.
+      </p>
+      <div id="fabric-quality-modal-body" class="fabric-quality-modal__body"></div>
+      <div class="fabric-quality-modal__footer form-actions">
+        <button type="button" class="btn btn--ghost" id="fabric-quality-modal-cancel">Cancel</button>
+        <button type="button" class="btn btn--primary" id="fabric-quality-modal-apply">Apply to pricing</button>
+      </div>
+    </div>
   </div>
 
   <script src="assets/js/data.js"></script>

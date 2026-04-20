@@ -41,42 +41,456 @@ const MOCK_COMPLETED = [
   },
 ];
 
+/** One vendor can have several material order lines (different fabrics / POs). */
 const MOCK_ONGOING = [
   {
     id: "REQ-2412",
+    displayRef: "TX-9902",
     vendor: "Atlas Weaving",
     material: "Merino wool jersey",
     progress: "QUOTATION PROVIDED",
+    qty: 1200,
+    progressPercent: 60,
     received: "2026-03-22",
     eta: "2026-04-10",
     incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-12",
+      "SAMPLE CONFIRMATION": "2026-03-18",
+      "QUOTATION PROVIDED": "2026-03-22",
+    },
+    log: [
+      {
+        title: "Enquiry received",
+        detail: "Atlas Weaving — Merino wool jersey",
+        at: "2026-03-12T09:00:00",
+        done: true,
+      },
+      { title: "Sample confirmed", at: "2026-03-18T14:30:00", done: true },
+      { title: "Quotations — pending", at: null, done: false },
+    ],
   },
   {
     id: "REQ-2410",
+    displayRef: "TX-9888",
     vendor: "Brightline Co.",
     material: "Cotton poplin",
     progress: "SAMPLE CONFIRMATION",
+    qty: 3400,
+    progressPercent: 40,
     received: "2026-03-26",
     eta: "2026-04-05",
     incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-20",
+      "SAMPLE CONFIRMATION": "2026-03-26",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-20T11:15:00", done: true },
+      { title: "Sample lab — in review", at: null, done: false },
+    ],
   },
   {
     id: "REQ-2407",
+    displayRef: "TX-9871",
     vendor: "Harbor Mills",
     material: "Stretch denim",
     progress: "PRICE CONFIRMATION",
+    qty: 800,
+    progressPercent: 80,
     received: "2026-03-18",
     eta: "2026-04-02",
     incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-08",
+      "SAMPLE CONFIRMATION": "2026-03-12",
+      "QUOTATION PROVIDED": "2026-03-16",
+      "PRICE CONFIRMATION": "2026-03-18",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-08T08:00:00", done: true },
+      { title: "Quotation sent", at: "2026-03-16T16:20:00", done: true },
+      { title: "Price confirmation — with buyer", at: null, done: false },
+    ],
   },
   {
     id: "REQ-2403",
+    displayRef: "TX-9855",
     vendor: "Southwind Fabrics",
     material: "Silk charmeuse",
     progress: "ENQUIRY / REACHOUT",
+    qty: 500,
+    progressPercent: 20,
     received: "2026-04-01",
     eta: "2026-04-20",
     incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-04-01",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-04-01T10:00:00", done: true },
+      { title: "Awaiting sample request", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2399",
+    displayRef: "TX-9833",
+    vendor: "Northloom Ltd.",
+    material: "Recycled poly twill",
+    progress: "QUOTATION PROVIDED",
+    qty: 2100,
+    progressPercent: 55,
+    received: "2026-03-15",
+    eta: "2026-04-12",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-02",
+      "SAMPLE CONFIRMATION": "2026-03-08",
+      "QUOTATION PROVIDED": "2026-03-15",
+    },
+    log: [
+      {
+        title: "Enquiry received",
+        detail: "Northloom — recycled poly twill, 2.1k m",
+        at: "2026-03-02T09:30:00",
+        done: true,
+      },
+      { title: "Sample approved", at: "2026-03-08T15:00:00", done: true },
+      { title: "Final quote — pending sign-off", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2395",
+    displayRef: "TX-9810",
+    vendor: "Coast Thread Co.",
+    material: "Bamboo jersey",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 950,
+    progressPercent: 35,
+    received: "2026-03-25",
+    eta: "2026-04-08",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-18",
+      "SAMPLE CONFIRMATION": "2026-03-25",
+    },
+    log: [
+      {
+        title: "Enquiry received",
+        detail: "Coast Thread — bamboo jersey swatch set",
+        at: "2026-03-18T11:00:00",
+        done: true,
+      },
+      { title: "Lab dip — in progress", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2418",
+    displayRef: "TX-9911",
+    vendor: "Atlas Weaving",
+    material: "Organic cotton twill",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 1800,
+    progressPercent: 45,
+    received: "2026-03-24",
+    eta: "2026-04-18",
+    incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-24",
+      "SAMPLE CONFIRMATION": "2026-03-28",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-24T10:00:00", done: true },
+      { title: "Strike-offs — pending", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2409",
+    displayRef: "TX-9880",
+    vendor: "Brightline Co.",
+    material: "Linen blend shirting",
+    progress: "ENQUIRY / REACHOUT",
+    qty: 2200,
+    progressPercent: 18,
+    received: "2026-03-29",
+    eta: "2026-04-25",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-29",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-29T14:20:00", done: true },
+      { title: "Tech pack review", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2405",
+    displayRef: "TX-9862",
+    vendor: "Harbor Mills",
+    material: "Brushed fleece",
+    progress: "QUOTATION PROVIDED",
+    qty: 600,
+    progressPercent: 50,
+    received: "2026-03-19",
+    eta: "2026-04-06",
+    incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-10",
+      "SAMPLE CONFIRMATION": "2026-03-14",
+      "QUOTATION PROVIDED": "2026-03-19",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-10T09:00:00", done: true },
+      { title: "Quotation issued", at: "2026-03-19T11:00:00", done: true },
+      { title: "MOQ discussion", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2401",
+    displayRef: "TX-9848",
+    vendor: "Southwind Fabrics",
+    material: "Cupro lining",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 1200,
+    progressPercent: 38,
+    received: "2026-03-27",
+    eta: "2026-04-14",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-20",
+      "SAMPLE CONFIRMATION": "2026-03-27",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-20T09:45:00", done: true },
+      { title: "Sample yardage — cutting", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2397",
+    displayRef: "TX-9825",
+    vendor: "Northloom Ltd.",
+    material: "Hemp canvas",
+    progress: "ENQUIRY / REACHOUT",
+    qty: 1400,
+    progressPercent: 22,
+    received: "2026-03-30",
+    eta: "2026-04-22",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-30",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-30T08:30:00", done: true },
+      { title: "Lead time estimate", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2393",
+    displayRef: "TX-9802",
+    vendor: "Coast Thread Co.",
+    material: "Tencel rib knit",
+    progress: "QUOTATION PROVIDED",
+    qty: 1100,
+    progressPercent: 52,
+    received: "2026-03-21",
+    eta: "2026-04-09",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-12",
+      "SAMPLE CONFIRMATION": "2026-03-16",
+      "QUOTATION PROVIDED": "2026-03-21",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-12T10:00:00", done: true },
+      { title: "Quote sent", at: "2026-03-21T15:00:00", done: true },
+      { title: "Awaiting PO", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2428",
+    displayRef: "TX-9935",
+    vendor: "Atlas Weaving",
+    material: "Cashmere blend suiting",
+    progress: "PRICE CONFIRMATION",
+    qty: 650,
+    progressPercent: 78,
+    received: "2026-03-28",
+    eta: "2026-04-11",
+    incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-14",
+      "SAMPLE CONFIRMATION": "2026-03-20",
+      "QUOTATION PROVIDED": "2026-03-25",
+      "PRICE CONFIRMATION": "2026-03-28",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-14T09:00:00", done: true },
+      { title: "Bulk quote issued", at: "2026-03-25T16:00:00", done: true },
+      { title: "Price lock — internal review", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2426",
+    displayRef: "TX-9928",
+    vendor: "Brightline Co.",
+    material: "Seersucker cotton",
+    progress: "QUOTATION PROVIDED",
+    qty: 2800,
+    progressPercent: 58,
+    received: "2026-03-31",
+    eta: "2026-04-16",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-22",
+      "SAMPLE CONFIRMATION": "2026-03-27",
+      "QUOTATION PROVIDED": "2026-03-31",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-22T10:30:00", done: true },
+      { title: "Quote pack — buyer review", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2424",
+    displayRef: "TX-9921",
+    vendor: "Harbor Mills",
+    material: "14-wale corduroy",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 1500,
+    progressPercent: 42,
+    received: "2026-03-30",
+    eta: "2026-04-19",
+    incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-21",
+      "SAMPLE CONFIRMATION": "2026-03-30",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-21T08:45:00", done: true },
+      { title: "Sample loom — queued", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2422",
+    displayRef: "TX-9916",
+    vendor: "Southwind Fabrics",
+    material: "Viscose crepe",
+    progress: "QUOTATION PROVIDED",
+    qty: 900,
+    progressPercent: 48,
+    received: "2026-03-23",
+    eta: "2026-04-07",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-15",
+      "SAMPLE CONFIRMATION": "2026-03-19",
+      "QUOTATION PROVIDED": "2026-03-23",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-15T11:00:00", done: true },
+      { title: "Lab dip approved", at: "2026-03-19T14:00:00", done: true },
+      { title: "Final quote — sign-off", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2420",
+    displayRef: "TX-9908",
+    vendor: "Northloom Ltd.",
+    material: "Deadstock wool coating",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 3200,
+    progressPercent: 44,
+    received: "2026-04-02",
+    eta: "2026-04-28",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-25",
+      "SAMPLE CONFIRMATION": "2026-04-02",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-25T09:20:00", done: true },
+      { title: "Stock check — mill response due", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2417",
+    displayRef: "TX-9895",
+    vendor: "Loomcraft Textiles",
+    material: "Melange double knit",
+    progress: "ENQUIRY / REACHOUT",
+    qty: 1750,
+    progressPercent: 15,
+    received: "2026-04-03",
+    eta: "2026-04-30",
+    incharge: "M. Chen",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-04-03",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-04-03T13:10:00", done: true },
+      { title: "Capacity check", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2416",
+    displayRef: "TX-9892",
+    vendor: "Loomcraft Textiles",
+    material: "Stretch woven (TR)",
+    progress: "SAMPLE CONFIRMATION",
+    qty: 4100,
+    progressPercent: 36,
+    received: "2026-03-17",
+    eta: "2026-04-15",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-05",
+      "SAMPLE CONFIRMATION": "2026-03-17",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-05T10:00:00", done: true },
+      { title: "Handfeel sample — courier", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2414",
+    displayRef: "TX-9885",
+    vendor: "Nova Threadworks",
+    material: "Metallic lurex mesh",
+    progress: "ENQUIRY / REACHOUT",
+    qty: 750,
+    progressPercent: 12,
+    received: "2026-04-02",
+    eta: "2026-05-01",
+    incharge: "J. Patel",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-04-02",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-04-02T15:45:00", done: true },
+      { title: "MOQ / lead — awaiting reply", at: null, done: false },
+    ],
+  },
+  {
+    id: "REQ-2413",
+    displayRef: "TX-9883",
+    vendor: "Nova Threadworks",
+    material: "Organic cotton voile",
+    progress: "QUOTATION PROVIDED",
+    qty: 2600,
+    progressPercent: 56,
+    received: "2026-03-14",
+    eta: "2026-04-10",
+    incharge: "A. Okonkwo",
+    stepDates: {
+      "ENQUIRY / REACHOUT": "2026-03-02",
+      "SAMPLE CONFIRMATION": "2026-03-08",
+      "QUOTATION PROVIDED": "2026-03-14",
+    },
+    log: [
+      { title: "Enquiry received", at: "2026-03-02T08:30:00", done: true },
+      { title: "Quote issued", at: "2026-03-14T12:00:00", done: true },
+      { title: "Revision request", at: null, done: false },
+    ],
   },
 ];
 
@@ -231,29 +645,151 @@ const MOCK_ALERTS = [
   },
 ];
 
+/** Inbox threads (received) — used by Mail · Inbox */
 const MOCK_MAIL = [
   {
     id: "m1",
+    unread: true,
     from: "buying@brightline.co",
     subject: "Stripe repeat and MOQ — cotton poplin",
+    ref: "BL-2044",
     summary:
       "Brightline requests 1.5m width cotton poplin with 3 blue / 2 red / 1 yellow stripes. MOQ 3,000m. Need price per meter and lead time after sample approval.",
     date: "2026-04-02",
+    body:
+      "Dear Team,\n\nPlease confirm stripe repeat and MOQ for the cotton poplin line discussed last week. We need indicative pricing per metre and rough lead time after lab dip approval.\n\nRegards,\nBrightline Buying",
   },
   {
     id: "m2",
+    unread: false,
     from: "procurement@atlasmills.io",
     subject: "Re: Merino jersey — shrinkage assumptions",
+    ref: "TX-9884",
     summary:
       "Atlas asks to confirm 3% shrinkage and whether buffer includes freight. They need updated quote by Friday.",
     date: "2026-04-01",
+    body:
+      "Dear Team,\n\nFollowing our call, please confirm that the 3% shrinkage in your model is post-finishing. Also clarify whether the buffer % you quoted includes inland freight to our mill.\n\nWe need an updated quotation by end of week.\n\nRegards,\nVendor Manager\nAtlas Mills Procurement",
   },
   {
     id: "m3",
+    unread: true,
     from: "ops@southwindfabrics.com",
     subject: "Linen blend enquiry",
+    ref: "SW-7712",
     summary:
       "New enquiry for linen-viscose 54\" width, natural dye compatible. Quantity TBD; need ballpark range first.",
     date: "2026-03-31",
+    body:
+      "Hello,\n\nWe are evaluating a linen–viscose blend at 54\" for a natural-dye programme. Quantities are not fixed yet — please share a ballpark £/m range and minimums for sampling.\n\nThanks,\nSouthwind Ops",
+  },
+];
+
+/**
+ * Saved drafts (not yet sent). Runtime code may append/update entries.
+ * Sent messages are not stored here — they live only in session after Send.
+ */
+const MOCK_MAIL_DRAFTS = [
+  {
+    id: "d1",
+    to: "quotes@harbor-mills.example",
+    subject: "Re: Poly twill — revised quotation",
+    body:
+      "Hi team,\n\nFollowing our call, please find updated figures below. We can hold the line on lead time if PO confirms by 15 Apr.\n\nBest,\nElite Textile",
+    updatedAt: "2026-04-01",
+  },
+  {
+    id: "d2",
+    to: "buying@brightline.co",
+    subject: "Cotton poplin stripe — internal note",
+    body: "(Draft) MOQ 3000m · width 1.5m · include buffer note in final mail.",
+    updatedAt: "2026-03-30",
+  },
+];
+
+/**
+ * Contact email dropdown for Fabric quality (empty value = not specified).
+ */
+const MOCK_FABRIC_EMAIL_OPTIONS = [
+  { value: "", label: "Not specified" },
+  { value: "buying@brightline.co", label: "buying@brightline.co" },
+  { value: "procurement@atlasmills.io", label: "procurement@atlasmills.io" },
+  { value: "quotes@harbor-mills.example", label: "quotes@harbor-mills.example" },
+  { value: "ops@southwindfabrics.com", label: "ops@southwindfabrics.com" },
+];
+
+/**
+ * Saved fabric quality recipes (dropdown uses `id` as value; `label` as display text).
+ */
+const MOCK_FABRIC_QUALITY_PRESETS = [
+  {
+    id: "fq-poplin-72",
+    label: "Cotton poplin — reed 72 / pick 60 / width 60",
+    customerSearch: "Brightline",
+    email: "buying@brightline.co",
+    material: "cotton",
+    reed: 72,
+    pick: 60,
+    width: 60,
+    certificate: "oeko",
+    warp: [
+      {
+        quality: "premium-a",
+        count: "40s",
+        type: "combed",
+        texture: "plain",
+        ends: 3200,
+        extraEnds: false,
+      },
+    ],
+    weft: [
+      {
+        quality: "premium-a",
+        count: "40s",
+        type: "combed",
+        texture: "plain",
+        ends: 2800,
+        extraEnds: false,
+      },
+    ],
+  },
+  {
+    id: "fq-jersey-64",
+    label: "Merino jersey — reed 64 / pick 48 / width 58",
+    customerSearch: "Atlas Mills",
+    email: "procurement@atlasmills.io",
+    material: "wool",
+    reed: 64,
+    pick: 48,
+    width: 58,
+    certificate: "gots",
+    warp: [
+      {
+        quality: "standard-b",
+        count: "30s",
+        type: "ring-spun",
+        texture: "slub",
+        ends: 4100,
+        extraEnds: true,
+      },
+      {
+        quality: "standard-b",
+        count: "30s",
+        type: "ring-spun",
+        texture: "plain",
+        ends: 2050,
+        extraEnds: false,
+      },
+    ],
+    weft: [
+      {
+        quality: "standard-b",
+        count: "30s",
+        type: "ring-spun",
+        texture: "plain",
+        ends: 3600,
+        extraEnds: false,
+      },
+    ],
   },
 ];
